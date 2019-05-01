@@ -10,7 +10,7 @@ theme: sandstone
 library(tidyverse)
 library(here)
 library(viridis)
-source(here::here("code/lib.R"))
+source(here::here("code/import_data.R"))
 theme_set(theme_bw())
 
 knitr::opts_chunk$set(tidy = FALSE,
@@ -44,9 +44,104 @@ Considerando essa variável, queremos examinar a relação entre ela e o quão h
 
 Faça uma visualização que usa os princípios de eficácia no projeto de visualizações para facilitar as comparações que você acha que são as mais importantes para entendermos esse contexto. 
 
+```{r}
+
+dados %>% filter(!is.na(four_regions)) %>%
+    ggplot(aes(
+        x = comentaram_prop,
+        y = PDI,
+        color = Internet,
+        size=usuarios/1000
+    )) +
+    geom_point() + 
+      facet_grid(site ~ four_regions) +
+  labs(color="Utilizadores 
+de internet 
+(em %)",size="Quantidade
+de usuários
+(em milhares)", x = "Proporção de usuários que comentaram", y= "Power Distance Index (PDI)")
+
+
+```
+
+
+
 ## Outras formas de ver
 
 Em seguida, faça 5 visualizações que usem as mesmas variáveis e também pontos, mas que sejam **menos eficazes** que a que você escolheu acima. 
+
+```{r}
+
+
+dados %>% filter(!is.na(four_regions)) %>%
+    ggplot(aes(
+        x = PDI,
+        y = comentaram_prop,
+        color = usuarios,
+        size=Internet
+    )) +
+    geom_point() + 
+      facet_grid(site ~ four_regions)
+
+```
+
+```{r}
+dados %>% filter(!is.na(four_regions)) %>%
+    ggplot(aes(
+        x = Internet,
+        y = comentaram_prop,
+        color = usuarios,
+        size=PDI
+    )) +
+    geom_point() + 
+      facet_grid(four_regions ~ site)
+
+```
+
+
+```{r}
+
+
+dados %>% filter(!is.na(four_regions))%>%
+    ggplot(aes(
+        x = six_regions,
+        y = PDI,
+        size = comentaram_prop,
+        color = Internet
+    )) +
+    geom_point() + 
+    coord_flip()
+
+
+```
+```{r}
+
+dados %>% filter(!is.na(four_regions))%>%
+    ggplot(aes(
+        x = six_regions,
+        y = PDI,
+        size = Internet,
+        color = comentaram_prop
+    )) +
+    geom_point() + 
+    coord_flip()
+
+
+```
+```{r}
+
+
+dados %>% filter(!is.na(four_regions))%>%
+    ggplot(aes(
+        x = PDI,
+        y = comentaram_prop,
+        color = Internet,
+        size = log10(usuarios)
+    )) +
+    geom_point(alpha = .6) + 
+    facet_grid(four_regions ~ ., scales = "free_y")
+
+```
 
 ## Bônus
 
